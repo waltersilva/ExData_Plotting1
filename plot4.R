@@ -1,0 +1,25 @@
+data<-read.table("household_power_consumption.txt", header=TRUE,sep=";",colClasses="character")
+data[,1]<-as.Date(data$Date,"%d/%m/%Y")
+data1<-subset(data,data$Date %in% as.Date(c("2007-02-01","2007-02-02")))
+data1$DateTime <- as.POSIXct(paste(data1$Date, data1$Time), format="%Y-%m-%d %H:%M:%S")
+
+data1$Global_active_power<-as.numeric(data1$Global_active_power)
+data1$Global_reactive_power<-as.numeric(data1$Global_reactive_power)
+data1$Voltage<-as.numeric(data1$Voltage)
+data1$Global_intensity<-as.numeric(data1$Global_intensity)
+data1$Sub_metering_1<-as.numeric(data1$Sub_metering_1)
+data1$Sub_metering_2<-as.numeric(data1$Sub_metering_2)
+data1$Sub_metering_3<-as.numeric(data1$Sub_metering_3)
+
+
+png(file="plot4.png",width = 480, height = 480, units = "px")
+par(mfrow=c(2,2))
+plot(data1$DateTime,data1$Global_active_power,type="l",xlab=" ",ylab="Global Active Power")
+plot(data1$DateTime,data1$Voltage,type="l",xlab="datetime",ylab="Voltage")
+plot(data1$DateTime,data1$Sub_metering_1,type="l",xlab=" ",ylab="Energy sub metering")
+lines(data1$DateTime,data1$Sub_metering_2,col="Red")
+lines(data1$DateTime,data1$Sub_metering_3,col="Blue")
+legend(x="topright",legend=c("Sub_metering_1","Sub_metering_2","Sub_metering_3"),col=c("Black","Red","Blue"),lwd=1,pt.cex=0.6,cex=0.6,bty="n")
+plot(data1$DateTime,data1$Global_reactive_power,type="l",xlab="datetime",ylab="Global_reactive_power")
+dev.off()
+
